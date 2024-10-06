@@ -42,16 +42,17 @@ int getLruFrame()
 
 void main()
 {
-    int pages[] = {12, 15, 12, 18, 6, 8, 11, 12, 19, 12, 6, 8, 12, 15, 19, 8};
-    int size = sizeof(pages) / 4;
+    int pages[] = {3,5,7,2,5,1,2,3,1,3,5,3,1,6,2};
+    int size = sizeof(pages) / sizeof(pages[0]);
     int pageFault = 0, i, j, fNo;
-    
+
     printf("\nEnter the number of frames: ");
     scanf("%d", &n);
     
     for (i = 0; i < n; i++)
     {
         frames[i].pNo = -1;
+        frames[i].counter = 0;
     }
     
     printf("\nPageNo      PageFrame       PageFault ");
@@ -59,6 +60,12 @@ void main()
 
     for (i = 0; i < size; i++)
     {
+        for (fNo = 0; fNo < n; fNo++)
+        {
+            if (frames[fNo].pNo != -1)
+                frames[fNo].counter++;
+        }
+
         j = pageFound(pages[i]);
         if (j == -1)
         {
@@ -68,6 +75,7 @@ void main()
                 j = getLruFrame();
 
             frames[j].pNo = pages[i];
+            frames[j].counter = 0;
             printf("\n%4d\t", pages[i]);
             for (fNo = 0; fNo < n; fNo++)
                 printf("%4d", frames[fNo].pNo);
@@ -82,5 +90,5 @@ void main()
         }
     }
     printf("\n---------------------------------------");
-    printf("\nTotal page faults: %d", pageFault);
+    printf("\nTotal page faults: %d\n", pageFault);
 }
